@@ -13,7 +13,7 @@ public class appUserController {
 	
 	@Autowired
 	private appUserService AppUserService; 
-	@GetMapping("/")
+	@GetMapping("/users") //at the moment it is mapped as /users on default it was /
 	public String viewHomePage(Model model) {
 		model.addAttribute("listUsers", AppUserService.getAllUsers());
 		return "index";	
