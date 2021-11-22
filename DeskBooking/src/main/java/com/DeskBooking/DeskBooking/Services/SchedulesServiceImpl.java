@@ -1,11 +1,37 @@
 package com.DeskBooking.DeskBooking.Services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.DeskBooking.DeskBooking.DTO.ShortScheduleInformation;
+import org.springframework.stereotype.Service;
 
 import com.DeskBooking.DeskBooking.Repositories.SchedulesRepository;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
+
+
+@Service
+@RequiredArgsConstructor
+@Transactional
 public class SchedulesServiceImpl implements SchedulesService {
 	
-	@Autowired
-	private SchedulesRepository schedulesRepository;
+	private final SchedulesRepository schedulesRepository;
+
+	@Override
+	public List<ShortScheduleInformation> getAllSchedulesShort(String username) {
+		return schedulesRepository.getAllSchedulesShortFromUser(username);
+	}
+
+	@Override
+	public List<ShortScheduleInformation> getFromToSchedulesShort(String user, Date from, Date to) {
+		return schedulesRepository.getFromToSchedulesFromUser(user, from, to);
+	}
+
+	@Override
+	public void disableSchedule(Long id) {
+		schedulesRepository.disableSchedule(id);
+	}
+
 }

@@ -4,14 +4,7 @@ package com.DeskBooking.DeskBooking.Models;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,12 +21,14 @@ public class Schedules {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Schedule_Id")
-	private long id;
+	private Long id;
 	@Column(name = "Status")
-	private boolean status;
+	private Boolean status;
 	@Column(name = "DateFrom")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateFrom;
 	@Column(name = "DateTo")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTo;
 	@ManyToOne
 	@JoinColumn(name = "User_ID", nullable = false)
@@ -41,6 +36,7 @@ public class Schedules {
 	@ManyToOne
 	@JoinColumn(name = "Desk_Id", nullable = false)
 	private Desks desk;
+	
 	public Schedules(boolean status, Date dateFrom, Date dateTo, Users user, Desks desk) {
 		this.status = status;
 		this.dateFrom = dateFrom;

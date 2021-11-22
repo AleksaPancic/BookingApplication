@@ -27,7 +27,7 @@ public class WorkingUnits {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "WorkingUnit_ID")
-	private long id;
+	private Long id;
 	
 	@Column(name = "WorkingUnitName")
 	private String unitName;
@@ -45,9 +45,9 @@ public class WorkingUnits {
 	@Column(name = "WorkingUnitMap")
 	private Blob map;
 	
-	
-	public WorkingUnits(String unitName, String unitAddress, String unitPhone, Blob map) {
+	public WorkingUnits(String unitName, City city, String unitAddress, String unitPhone, Blob map) {
 		this.unitName = unitName;
+		this.city = city;
 		this.unitAddress = unitAddress;
 		this.unitPhone = unitPhone;
 		this.map = map;

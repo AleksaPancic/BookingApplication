@@ -51,11 +51,11 @@ public class Users {
 	@JoinColumn(name = "WorkingUnit_ID", nullable = true)
 	private WorkingUnits workingUnit;
 	@ManyToMany(fetch = FetchType.EAGER) //to load all the roles when user is loaded "fetch"
-	private Collection<Role> roles = new ArrayList<>();
+	private Collection<Roles> roles = new ArrayList<>();
 
 	public Users(String username, String firstName, String lastName, String email, String password,
-			String telephone,Date dateOpen, Boolean userActive, /*WorkingUnits workingUnit,*/
-			Collection<Role> roles) {
+			String telephone,Date dateOpen, Boolean userActive, WorkingUnits workingUnit,
+			Collection<Roles> roles) {
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -64,7 +64,7 @@ public class Users {
 		this.telephone = telephone;
 		this.dateOpen = dateOpen;
 		this.userActive = userActive;
-		//this.workingUnit = workingUnit;
+		this.workingUnit = workingUnit;
 		this.roles = roles;
 	}
 }

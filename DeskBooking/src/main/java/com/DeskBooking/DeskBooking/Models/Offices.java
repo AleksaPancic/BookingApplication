@@ -22,7 +22,7 @@ public class Offices {
     @Column(name = "Office_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "Name")
     private String name;
     @OneToOne

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>v2</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+            * {
+                margin:0;
+                padding: 0;
+                border: 0;
+            }
+            
+            body {
+                font-family: 'Open Sans', sans-serif;
+                background-color: #fff;
+                font-size: 24px;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 3%;
+            }
+
+            img {
+                max-width: 40%;
+            }
+
+            header {
+                width: 98%;
+            }
+
+
+            #wrapper {
+                /* background-image: url('backgroundImage.jpg'); */
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+
+            #banner {
+                background-color: #fff;
+                text-align: center;
+            }
+            
+            h1,p {
+                margin-top: 40px;
+                margin-bottom: 40px;
+                text-align: center;
+            }
+            hr {
+                height: 1px;
+                background-color: black;
+                clear: both;
+                width: 90%;
+                margin: auto;
+            }
+            #contact {
+                text-align: center;
+                padding-bottom: 3%;
+                line-height: 15px;
+                font-size: 12px;
+                color: #303840;
+                margin: auto;
+            }
+            #one-col {
+                background-color: #FFF;
+            }
+            .footer {
+                background-color: #FFF;
+                margin-top: 15px;
+            }
+            .pbtn {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+            .btn {
+                margin: auto;
+                background-color: #279CCE;
+                color: #FFF;
+                padding: 10px;
+                text-decoration: none;
+                font-weight: 800;
+                border-radius: 8px;
+                letter-spacing: 2px;
+                
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+
+            <div class="one-col">
+                  <h1 th:text="${'Welcome to Deskbooking ' + name}">Welcome to Deskbooking!</h1>
+            </div>
+            <p>
+                Thank you for registering. Click the button to activate your account.
+            </p>
+            <div class="pbtn">
+            	<a th:href="${link}" class="btn">Activate Now</a>
+            </div>
+            <p>This message will self destruct in 15 minutes!</p>
+            <hr />
+            <div class="footer">
+                <p id="contact">
+                 <img src="deskbookIng1.png" alt=""/> <br /> 
+                Copyright © 2021 enjoy.ing
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
