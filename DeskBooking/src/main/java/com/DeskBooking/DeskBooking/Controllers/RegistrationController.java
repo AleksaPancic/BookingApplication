@@ -25,15 +25,6 @@ public class RegistrationController {
 		String password = request.getPassword();
 		String confPassword = request.getConfirmPassword();
 		
-		if(password.equals("")) {
-			throw new Exception("Password empty field");
-		}
-		if(confPassword.equals("")) {
-			throw new Exception("ConfPassword Empty field");
-		}
-		if(confPassword.equals(password)) {
-			throw new Exception("OK!");
-		}
 		if (!password.equals(confPassword)) {
 			throw new PasswordsDoNotMatchException();
 		}

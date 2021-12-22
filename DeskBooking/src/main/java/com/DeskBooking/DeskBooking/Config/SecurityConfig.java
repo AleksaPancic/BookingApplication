@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -39,15 +40,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManagerBean());
-        http.csrf().disable();	
-        http.cors().and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-        http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/login").permitAll();
-        http.authorizeRequests().antMatchers("/register").permitAll();
-        http.authorizeRequests().antMatchers("/register/confirm**").permitAll();
-        http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(authenticationFilter);
-        http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		http
+		.csrf().disable()
+		.cors()
+		.and()
+		.sessionManagement().sessionCreationPolicy(STATELESS)
+		.and()
+		.authorizeRequests()
+			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+			.antMatchers("/profile/token/refresh","/login/**","/reset/**","/register/**","/images/**","/css/**","/profile/reset/password/**").permitAll()
+			.antMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_ENJOYING_ADMIN")
+		.and()
+		.addFilter(authenticationFilter)
+		.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		
+		http
+		.formLogin()
+		.loginPage("/superadmin/login").passwordParameter("password").usernameParameter("username").defaultSuccessUrl("/superadmin/panel", true).failureUrl("/superadmin/login/error").failureForwardUrl("/superadmin/login/error")
+		.and()
+		.exceptionHandling().accessDeniedPage("/superadmin/403")
+		.and()
+		.logout().logoutUrl("/superadmin/logout").logoutSuccessUrl("/superadmin/login?logout")
+		.and()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+		.and()
+		.authorizeRequests()
+		.antMatchers("/superadmin/login").permitAll()
+		.antMatchers("/superadmin/panel**").hasAuthority("ROLE_ENJOYING_ADMIN")
+		.antMatchers("/superadmin/changeActivity").hasAuthority("ROLE_ENJOYING_ADMIN")
+		.antMatchers("/superadmin/changeAdminPrivilege").hasAuthority("ROLE_ENJOYING_ADMIN")
+		.antMatchers("/superadmin/searchUser").hasAuthority("ROLE_ENJOYING_ADMIN")
+		.anyRequest().authenticated();
 	}
 	
 	@Bean

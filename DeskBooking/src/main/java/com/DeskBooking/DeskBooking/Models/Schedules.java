@@ -31,10 +31,10 @@ public class Schedules {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateTo;
 	@ManyToOne
-	@JoinColumn(name = "User_ID", nullable = false)
+	@JoinColumn(name = "User_ID", nullable = true)
 	private Users user;
 	@ManyToOne
-	@JoinColumn(name = "Desk_Id", nullable = false)
+	@JoinColumn(name = "Desk_Id", nullable = true)
 	private Desks desk;
 	
 	public Schedules(boolean status, Date dateFrom, Date dateTo, Users user, Desks desk) {

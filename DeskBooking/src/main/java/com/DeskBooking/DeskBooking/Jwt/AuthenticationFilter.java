@@ -2,7 +2,6 @@ package com.DeskBooking.DeskBooking.Jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.DeskBooking.DeskBooking.Jwt.Encrypt.AES;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,17 +31,13 @@ import java.util.stream.Collectors;
 //Class that validates credentials that client sends
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
-    private final String key = "Secret key is enjoy.ing, application is deskbook.ing";
-    private final String originalString = "nBBQ9PtzoJK8ppta7";
-    private final String encryptedString = AES.encrypt(originalString, key);
 	private final AuthenticationManager authenticationManager;
-	
+		
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request,  //when user try to login
 											    HttpServletResponse response) throws AuthenticationException {
 		   	String username = request.getParameter("username");
 	        String password = request.getParameter("password");
-	        log.info("Username is: {}", username); log.info("Password is: {}", password);
 	        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
 	        return authenticationManager.authenticate(authenticationToken);
 	}
@@ -64,6 +59,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + 100 * 60 * 10000))
 				.withIssuer(request.getRequestURL().toString())
+				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.sign(algorithm);
 		//response.setHeader("access_token", access_token);
 		//response.setHeader("refresh_token", refresh_token);

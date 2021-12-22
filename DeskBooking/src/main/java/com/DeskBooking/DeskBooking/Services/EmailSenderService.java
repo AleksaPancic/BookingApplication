@@ -8,4 +8,5 @@ import com.DeskBooking.DeskBooking.Models.Mail;
 public interface EmailSenderService {
 	
 	void send(Mail mail);
+	void sendResetPasswordMail(Mail mail);
 }

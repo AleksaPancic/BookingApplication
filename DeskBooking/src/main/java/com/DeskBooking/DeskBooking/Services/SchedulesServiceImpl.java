@@ -1,6 +1,8 @@
 package com.DeskBooking.DeskBooking.Services;
 
 import com.DeskBooking.DeskBooking.DTO.ShortScheduleInformation;
+import com.DeskBooking.DeskBooking.Models.Schedules;
+
 import org.springframework.stereotype.Service;
 
 import com.DeskBooking.DeskBooking.Repositories.SchedulesRepository;
@@ -34,4 +36,8 @@ public class SchedulesServiceImpl implements SchedulesService {
 		schedulesRepository.disableSchedule(id);
 	}
 
+	@Override
+	public Schedules saveSchedules(Schedules schedule) {
+		return schedulesRepository.save(schedule);
+	}
 }

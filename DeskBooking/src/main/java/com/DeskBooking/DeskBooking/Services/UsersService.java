@@ -11,6 +11,7 @@ public interface UsersService {
 	Roles saveRole(Roles role);
 	public void addUsername(String usernameact, String username);
 	public void addPassword(String username, String password);
+	public String resetPassword(String username);
 	public void changeAll(String usernameact, String  firstName
 			, String lastName, String telephone, String email);
 	void addWorkingUnitToUser(String username, String workingunitname);
@@ -27,4 +28,13 @@ public interface UsersService {
 	String getTelephone(String username);
 	Users getUser(String username);
 	List<Users> getUsers(Integer pageNo, Integer pageSize);
+	void deleteUser(Users user);
+	void disableUser(Users user);
+	void changeUserActivity(Users user);
+	void addAdminRole(Users user);
+	void removeAdminRole(Users user);
+	List<Users> getUsersSearch(Integer pageNo, Integer pageSize, String name);
+	int getUsersSearchCount(String name);
+	void removeSuperAdminRole(Users user);
+	void removeUserRole(Users user);
 }

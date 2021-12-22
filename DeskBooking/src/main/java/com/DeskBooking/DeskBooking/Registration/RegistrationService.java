@@ -10,6 +10,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.DeskBooking.DeskBooking.Exceptions.CapitalLetterException;
+import com.DeskBooking.DeskBooking.Exceptions.LowercaseLetterException;
+import com.DeskBooking.DeskBooking.Exceptions.PasswordLenghtException;
+import com.DeskBooking.DeskBooking.Exceptions.PasswordNumberException;
+import com.DeskBooking.DeskBooking.Exceptions.PasswordSpaceException;
+import com.DeskBooking.DeskBooking.Exceptions.SpecialCharacterException;
 import com.DeskBooking.DeskBooking.Models.Mail;
 import com.DeskBooking.DeskBooking.Models.Users;
 import com.DeskBooking.DeskBooking.Registration.Token.ConfirmationToken;
@@ -19,6 +25,7 @@ import com.DeskBooking.DeskBooking.Repositories.WorkingUnitsRepository;
 import com.DeskBooking.DeskBooking.Services.CustomUserDetailService;
 import com.DeskBooking.DeskBooking.Services.EmailSenderService;
 import com.DeskBooking.DeskBooking.Services.EmailValidator;
+import com.DeskBooking.DeskBooking.Services.HtmlData;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,14 +43,98 @@ public class RegistrationService {
 	private final EmailSenderService emailSenderService;
 	private final ConfirmationTokenService confirmationTokenService;
 	private final EmailValidator emailValidator;
+	private final HtmlData htmlData;
 	
-	public String register(RegistrationRequest request) {
+	public String register(RegistrationRequest request) throws Exception {
 		boolean isValidEmail = emailValidator.test(request.getEmail());
 		if(!isValidEmail) {
 			throw new IllegalStateException("email not valid");
 		}
 		
 		Date date = new Date();
+		
+		 String password = (request.getPassword());
+ 		{
+		if(!((password.length() >= 8)
+	              && (password.length() <= 30))) {
+			throw new PasswordLenghtException();
+			}
+	    }
+	    		
+	    		  if (password.contains(" ")) {
+	    	            throw new PasswordSpaceException();
+	    	        }
+	    	        if (true) {
+	    	            int count = 0;
+	    	  
+	    	         
+	    	            for (int i = 0; i <= 9; i++) {
+	    	  
+	    	                
+	    	                String str1 = Integer.toString(i);
+	    	  
+	    	                if (password.contains(str1)) {
+	    	                    count = 1;
+	    	                }
+	    	            }
+	    	            if (count == 0) {
+	    	                throw new PasswordNumberException();
+	    	            }
+	    	        }
+	    	        
+	    	        if (!(password.contains("@") || password.contains("#")
+	    	                || password.contains("!") || password.contains("~")
+	    	                || password.contains("$") || password.contains("%")
+	    	                || password.contains("^") || password.contains("&")
+	    	                || password.contains("*") || password.contains("(")
+	    	                || password.contains(")") || password.contains("-")
+	    	                || password.contains("+") || password.contains("/")
+	    	                || password.contains(":") || password.contains(".")
+	    	                || password.contains(", ") || password.contains("<")
+	    	                || password.contains(">") || password.contains("?")
+	    	                || password.contains("|"))) {
+	    	              throw new SpecialCharacterException();
+	    	              
+	    	          }
+	    	        
+	    	        if (true) {
+	    	            int count = 0;
+	    	  
+	    	            // checking capital letters
+	    	            for (int i = 65; i <= 90; i++) {
+	    	  
+	    	              
+	    	                char c = (char)i;
+	    	  
+	    	                String str1 = Character.toString(c);
+	    	                if (password.contains(str1)) {
+	    	                    count = 1;
+	    	                }
+	    	            }
+	    	            if (count == 0) {
+	    	                throw new CapitalLetterException();
+	    	            }
+	    	        }
+	    	        
+	    	        if (true) {
+	    	            int count = 0;
+	    	  
+	    	         
+	    	            for (int i = 90; i <= 122; i++) {
+	    	  
+	    	                // type casting
+	    	                char c = (char)i;
+	    	                String str1 = Character.toString(c);
+	    	  
+	    	                if (password.contains(str1)) {
+	    	                    count = 1;
+	    	                }
+	    	            }
+	    	            if (count == 0) {
+	    	                throw new LowercaseLetterException();
+	    	            }
+	    	        }
+		
 		String encodedPassword = passwordEncoder.encode(request.getPassword());
 		
 		//confirmation token
@@ -66,7 +157,7 @@ public class RegistrationService {
 		
 		return token;
 		}
-		
+	
 		@Transactional
 		public String confirmToken(String token) {
 			ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElseThrow(() -> new IllegalStateException("Token not found"));
@@ -84,7 +175,7 @@ public class RegistrationService {
 			confirmationTokenService.setConfirmedAt(token);
 			customUserDetailService.ChangeActivityForUser(confirmationToken.getUser().getUsername(), true);
 			
-			return "confirmed";
+			return htmlData.confirmedRegistration();
 		}
 	
 }

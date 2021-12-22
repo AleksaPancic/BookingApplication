@@ -15,5 +15,6 @@ import com.DeskBooking.DeskBooking.Models.WorkingUnits;
 public interface OfficesRepository extends JpaRepository<Offices, Long>  {
 	List<Offices> findByWorkingUnit(Optional<WorkingUnits> workingUnit);
 	List<Offices> findByWorkingUnit(WorkingUnits workingUnit);
+	Offices findByName(String name);
 	Optional<Offices> findById(Long id);
 }

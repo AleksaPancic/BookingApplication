@@ -1,7 +1,5 @@
 package com.DeskBooking.DeskBooking.Models;
 
-import java.sql.Blob;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -41,11 +39,14 @@ public class WorkingUnits {
 	@Column(name = "WorkingUnitPhone")
 	private String unitPhone;
 	
-	//map BLOB?
 	@Column(name = "WorkingUnitMap")
-	private Blob map;
+	private String map;
 	
-	public WorkingUnits(String unitName, City city, String unitAddress, String unitPhone, Blob map) {
+	@Column(name = "WorkingUnitParkingMap")
+	private String parkingMap;
+	
+	public WorkingUnits(String unitName, City city, String unitAddress, String unitPhone, String map, String parkingMap) {
+		this.parkingMap = parkingMap;
 		this.unitName = unitName;
 		this.city = city;
 		this.unitAddress = unitAddress;

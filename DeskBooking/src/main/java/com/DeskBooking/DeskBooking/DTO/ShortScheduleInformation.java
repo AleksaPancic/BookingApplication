@@ -2,8 +2,6 @@ package com.DeskBooking.DeskBooking.DTO;
 
 import lombok.*;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Data

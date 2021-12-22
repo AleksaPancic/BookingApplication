@@ -1,7 +1,7 @@
 package com.DeskBooking.DeskBooking.Controllers;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.DeskBooking.DeskBooking.Exceptions.InvalidInputException;
 import com.DeskBooking.DeskBooking.Models.Roles;
 import com.DeskBooking.DeskBooking.Models.Users;
 import com.DeskBooking.DeskBooking.Services.CustomUserDetailService;
@@ -66,13 +67,12 @@ public class UsersController {
 				usersService.addWorkingUnitToUser(principle.getName(), form.getWorkingUnit());
 				}
 				else {
-					throw new Exception("Invalid input, change your input to match one of the following: Nis Office, Beograd Office, Kragujec Office");
+					throw new InvalidInputException("Invalid input, change your input to match one of the following: Nis Office, Beograd Office, Kragujec Office");
 				}
-				//return ResponseEntity.ok().build();
 				return ResponseEntity.ok().body(usersService.getUser(principle.getName()));
 		}
 		else {
-			throw new Exception("Invalid input all fields must be filled and your email must be part of enjoying team!");
+			throw new InvalidInputException("Invalid input all fields must be filled and your email must be part of enjoying team!");
 		}
 	}
 		
@@ -82,18 +82,34 @@ public class UsersController {
 		usersService.addPassword(principal.getName(), form.getPassword());
 		return ResponseEntity.ok().build();
 		}else {
-			throw new Exception("Password must be at least 4 characters long");
+			throw new InvalidInputException("Password must be at least 4 characters long");
 		}
-	}	
-		
+	}
+			
 	@GetMapping("view/user/list")
 	public ResponseEntity<List<Users>> getUsers(		
 			@RequestParam(defaultValue = "0") Integer pageNo, 
-	        @RequestParam(defaultValue = "10") Integer pageSize){
+	        @RequestParam(defaultValue = "5") Integer pageSize){
 		 List<Users> list = usersService.getUsers(pageNo, pageSize);
 	 return new ResponseEntity<List<Users>>(list, HttpStatus.OK);
 	}
+
+	@GetMapping("/view/user/search")
+	public ResponseEntity<List<Users>> getUsersSearch(
+			@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "5") Integer pageSize,
+			@RequestParam String name) {
+
+		List<Users> list = usersService.getUsersSearch(pageNo, pageSize, name);
+		return new ResponseEntity<List<Users>>(list, HttpStatus.OK);
+	}
 	
+	//return number of users
+	@GetMapping("view/users/number")
+	public ResponseEntity<Integer> getNumOfUsers(){
+		Integer num = usersService.getNumOfUsers();
+		return new ResponseEntity<Integer>(num, HttpStatus.OK);
+	}
 		
 	@PostMapping("/update/user")
 	public ResponseEntity<Users> saveUser(@RequestBody Users user){
@@ -113,13 +129,12 @@ public class UsersController {
 		return ResponseEntity.ok().build();
 	}
 		
-	
 	//REFRESH TOKEN
 	
 	 @GetMapping("/token/refresh")
 	    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 	        String authorizationHeader = request.getHeader(AUTHORIZATION);
-	        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+	      
 	            try {
 	                String refresh_token = authorizationHeader.substring("Bearer ".length());
 	                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
@@ -140,15 +155,13 @@ public class UsersController {
 	                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 	            }catch (Exception exception) {
 	                response.setHeader("error", exception.getMessage());
-	                response.setStatus(FORBIDDEN.value());
+	                response.setStatus(UNAUTHORIZED.value());
 	                Map<String, String> error = new HashMap<>();
 	                error.put("error_message", exception.getMessage());
 	                response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
 	                new ObjectMapper().writeValue(response.getOutputStream(), error);
 	            }
-	        } else {
-	            throw new RuntimeException("Refresh token is missing");
-	        }
+	        
 	    }
 	
 }
@@ -163,6 +176,7 @@ class UpdateForm{
 	private String workingUnit;
 	private String telephone;
 }
+
 @Data
 class RoleToUserForm{
 	private String username;

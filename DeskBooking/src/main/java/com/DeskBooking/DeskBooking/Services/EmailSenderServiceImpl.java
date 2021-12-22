@@ -56,4 +56,34 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 			throw new IllegalStateException("Failed to send email");
 		}
 	}
+
+	@Override
+	public void sendResetPasswordMail(Mail mail) {
+		try {
+			log.info("Sending email...");
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, 
+					MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+					StandardCharsets.UTF_8.name());			
+			helper.addAttachment("deskbooking.png", new ClassPathResource("/static/deskbookIng1.png"));
+
+			Context context = new Context();
+			context.setVariables(mail.getProps());
+			
+			String html = templateEngine.process("mailResetPasswordTemplate", context);
+			
+			helper.setTo(mail.getMailTo());
+			helper.setText(html, true);
+			helper.setSubject("Deskbooking email confirmation");
+			helper.setFrom("helpdesk@enjoying.rs");
+			
+			mailSender.send(mimeMessage);
+			log.info("Email sent successfuly!");
+			
+		} catch (MessagingException e) {
+			log.error("Failed to send email", e);
+			throw new IllegalStateException("Failed to send email");
+		}
+		
+	}
 }
