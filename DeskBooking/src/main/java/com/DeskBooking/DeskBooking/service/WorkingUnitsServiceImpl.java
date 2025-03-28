@@ -1,0 +1,26 @@
+package com.DeskBooking.DeskBooking.service;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.DeskBooking.DeskBooking.model.WorkingUnits;
+import com.DeskBooking.DeskBooking.repository.WorkingUnitsRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+@Slf4j
+public class WorkingUnitsServiceImpl implements WorkingUnitsService {
+	
+	private final WorkingUnitsRepository workingUnitsRepository;
+	
+	@Override
+	public WorkingUnits saveWorkingUnit(WorkingUnits workingUnits) {
+		log.info("Saving Working unit {} to the database", workingUnits.getUnitName());
+		return workingUnitsRepository.save(workingUnits);
+	}
+	
+}
