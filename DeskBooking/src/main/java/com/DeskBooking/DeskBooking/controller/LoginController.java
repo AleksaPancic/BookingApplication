@@ -2,6 +2,7 @@ package com.DeskBooking.DeskBooking.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,15 +13,15 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(path = "/login")
+//@RequestMapping(path = "/login")
 public class LoginController {
 	
 	private final CustomUserDetailService usersService;
-	
-	@GetMapping
-	public String login() {
-		return "login";
-	}
+
+//	@GetMapping
+//	public String login() {
+//		return "login";
+//	}
 /*
 	@PostMapping("/reset") 
 	public String passwordReset(@RequestBody RegistrationRequest request) {
@@ -37,11 +38,15 @@ public class LoginController {
 	public String confirm(@RequestParam("token") String token) {
 		return usersService.confirmToken(token);
 	}
-	
+
 	@GetMapping("/")
 	public String app() {
-		
-		return "app";
+
+		return "index";
 	}
-	
+
+	@PostMapping("/login")
+	public String login(@RequestParam("username") String username, @RequestParam("password") String password) {
+		return "redirect:/login";
+	}
 }

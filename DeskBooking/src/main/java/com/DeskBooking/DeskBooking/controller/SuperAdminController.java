@@ -1,7 +1,7 @@
 package com.DeskBooking.DeskBooking.controller;
 
 import com.DeskBooking.DeskBooking.model.Roles;
-import com.DeskBooking.DeskBooking.model.Users;
+import com.DeskBooking.DeskBooking.model.User;
 import com.DeskBooking.DeskBooking.service.CustomUserDetailService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +40,7 @@ public class SuperAdminController {
         model.addAttribute("pageNo", page);
         model.addAttribute("pageSize", size);
 
-        List<Users> listUsers = usersService.getUsers(page, size);
+        List<User> listUsers = usersService.getUsers(page, size);
         model.addAttribute("listUsers", listUsers);
 
         int numOfUsers = usersService.getNumOfUsers();
@@ -61,7 +61,7 @@ public class SuperAdminController {
         model.addAttribute("pageNo", page);
         model.addAttribute("pageSize", size);
 
-        List<Users> listUsers = usersService.getUsers(page, size);
+        List<User> listUsers = usersService.getUsers(page, size);
         model.addAttribute("listUsers", listUsers);
 
         int numOfUsers = usersService.getNumOfUsers();
@@ -82,21 +82,21 @@ public class SuperAdminController {
 
     @PostMapping("/superadmin/changeActivity")
     public String changeUserActivity(String username, Integer pageNo, Integer pageSize, Model model) {
-        Users user = usersService.getUser(username);
+        User user = usersService.getUser(username);
         usersService.changeUserActivity(user);
         return "redirect:/superadmin/panel?pageNo=" + pageNo.toString() + "&pageSize=" + pageSize.toString();
     }
 
     @PostMapping("/superadmin/delete")
     public String deleteUser(String username, Integer pageNo, Integer pageSize, Model model) {
-        Users user = usersService.getUser(username);
+        User user = usersService.getUser(username);
         usersService.deleteUser(user);
         return "redirect:/superadmin/panel?pageNo=" + pageNo.toString() + "&pageSize=" + pageSize.toString();
     }
 
     @PostMapping("/superadmin/changeAdminPrivilege")
     public String changeUserAdmin(String username, Integer pageNo, Integer pageSize, Model model) {
-        Users user = usersService.getUser(username);
+        User user = usersService.getUser(username);
         List<Roles> rolesList = user.getRoles();
 
         boolean isAdmin = rolesList.stream().map(Roles::getName).anyMatch(roleName -> roleName.equals("ROLE_ADMIN"));
@@ -139,7 +139,7 @@ public class SuperAdminController {
         model.addAttribute("pageSize", size);
         model.addAttribute("name", name);
 
-        List<Users> listSearchedUsers = usersService.getUsersSearch(page, size, name);
+        List<User> listSearchedUsers = usersService.getUsersSearch(page, size, name);
         model.addAttribute("listUsers", listSearchedUsers);
 
         int numOfUsers = usersService.getUsersSearchCount(name);

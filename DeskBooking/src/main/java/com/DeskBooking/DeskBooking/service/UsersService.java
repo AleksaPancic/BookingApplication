@@ -4,10 +4,10 @@ import java.util.List;
 
 
 import com.DeskBooking.DeskBooking.model.Roles;
-import com.DeskBooking.DeskBooking.model.Users;
+import com.DeskBooking.DeskBooking.model.User;
 
 public interface UsersService {
-	Users saveUser(Users user);
+	User saveUser(User user);
 	Roles saveRole(Roles role);
 	public void addUsername(String usernameact, String username);
 	public void addPassword(String username, String password);
@@ -26,15 +26,15 @@ public interface UsersService {
 	String getEmail(String username);
 	String getWorkingUnit(String username);
 	String getTelephone(String username);
-	Users getUser(String username);
-	List<Users> getUsers(Integer pageNo, Integer pageSize);
-	void deleteUser(Users user);
-	void disableUser(Users user);
-	void changeUserActivity(Users user);
-	void addAdminRole(Users user);
-	void removeAdminRole(Users user);
-	List<Users> getUsersSearch(Integer pageNo, Integer pageSize, String name);
+	User getUser(String username);
+	List<User> getUsers(Integer pageNo, Integer pageSize);
+	void deleteUser(User user);
+	void disableUser(User user);
+	void changeUserActivity(User user);
+	void addAdminRole(User user);
+	void removeAdminRole(User user);
+	List<User> getUsersSearch(Integer pageNo, Integer pageSize, String name);
 	int getUsersSearchCount(String name);
-	void removeSuperAdminRole(Users user);
-	void removeUserRole(Users user);
+	void removeSuperAdminRole(User user);
+	void removeUserRole(User user);
 }

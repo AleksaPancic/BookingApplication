@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.DeskBooking.DeskBooking.model.Mail;
 import com.DeskBooking.DeskBooking.model.Roles;
-import com.DeskBooking.DeskBooking.model.Users;
+import com.DeskBooking.DeskBooking.model.User;
 import com.DeskBooking.DeskBooking.model.WorkingUnits;
 import com.DeskBooking.DeskBooking.repository.RoleRepository;
 import com.DeskBooking.DeskBooking.repository.UsersRepository;
@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class CustomUserDetailService implements UsersService, UserDetailsService {
+public class CustomUserDetailService implements UserDetailsService, UsersService {
 
    
     private final UsersRepository usersRepository;
@@ -51,25 +51,10 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	private final EmailValidator emailValidator;
 	private final HtmlData htmlData;
 	private String password;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    	Users user = usersRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("Invalid username or password");
-        }
-         if (user.getUserActive() == false) {
-        	 throw new UsernameNotFoundException ("User is not active");
-        } 
-          
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), 
-        		mapRolesToAuthorities(user.getRoles()));
-      
-    }
     
-    public String signUpUser(Users user) 
+    public String signUpUser(User user)
     		throws UsernameAlredyTakenException {
-		Users userExist = usersRepository.findByUsername(user.getUsername()); 
+		User userExist = usersRepository.findByUsername(user.getUsername());
 		
 		if (userExist != null) {
 			throw new UsernameAlredyTakenException(user.getUsername());
@@ -101,7 +86,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
    
 	@Override
 	
-	public Users saveUser(Users user) {
+	public User saveUser(User user) {
 		
 		log.info("Saving new user {} to the database", user.getUsername());
 
@@ -117,12 +102,12 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	@Override
 	public void addRoleToUser(String username, String roleName) {
 		log.info("Adding role {} to the user {}", roleName , username);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		Roles role = roleRepository.findByName(roleName);
 		user.getRoles().add(role);
 	}
 	@Override
-	public Users getUser(String username) {
+	public User getUser(String username) {
 		log.info("Fetching user {} from database", username);
 		if(usersRepository.findByUsername(username) == null) {
 			throw new UserNotFoundException("User not found.. ");
@@ -130,32 +115,32 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 		return usersRepository.findByUsername(username);
 	}
 	@Override
-	public List<Users> getUsers(Integer pageNo, Integer pageSize) { //ne treba , po aktivnim korisnicimam ne aktivni page
+	public List<User> getUsers(Integer pageNo, Integer pageSize) { //ne treba , po aktivnim korisnicimam ne aktivni page
 		
 		 Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("firstName"));
-		 Page<Users> pagedResult = usersRepository.findAll(paging);
+		 Page<User> pagedResult = usersRepository.findAll(paging);
 		
 		 
 		log.info("Fetching all users from database, user count: {}", usersRepository.count());
 		if(pagedResult.hasContent()) {
             return pagedResult.getContent(); 
         } else {
-            return new ArrayList<Users>();
+            return new ArrayList<User>();
         }
 	}
 
 	@Override
-	public void deleteUser(Users user) {
+	public void deleteUser(User user) {
 		usersRepository.delete(user);
 	}
 
 	@Override
-	public void disableUser(Users user) {
+	public void disableUser(User user) {
 		user.setUserActive(false);
 	}
 
 	@Override
-	public void changeUserActivity(Users user) {
+	public void changeUserActivity(User user) {
 		if (user.getUserActive()) {
 			user.setUserActive(false);
 		}
@@ -165,7 +150,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	}
 
 	@Override
-	public void addAdminRole(Users user) {
+	public void addAdminRole(User user) {
 		Roles adminRole = roleRepository.findByName("ROLE_ADMIN");
 		Roles userRole = roleRepository.findByName("ROLE_USER");
 		List<Roles> userRoles = user.getRoles();
@@ -175,7 +160,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	}
 
 	@Override
-	public void removeAdminRole(Users user) {
+	public void removeAdminRole(User user) {
 		Roles adminRole = roleRepository.findByName("ROLE_ADMIN");
 		List<Roles> userRoles = user.getRoles();
 		userRoles.remove(adminRole);
@@ -183,7 +168,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	}
 	
 	@Override
-	public void removeSuperAdminRole(Users user) {
+	public void removeSuperAdminRole(User user) {
 		Roles superAdminRole = roleRepository.findByName("ROLE_ENJOYING_ADMIN");
 		List<Roles> userRoles = user.getRoles();
 		userRoles.remove(superAdminRole);
@@ -191,18 +176,18 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	}
 	
 	@Override
-	public void removeUserRole(Users user) {
-		Roles	userRole = roleRepository.findByName("ROLE_USER");
+	public void removeUserRole(User user) {
+		Roles userRole = roleRepository.findByName("ROLE_USER");
 		List<Roles> userRoles = user.getRoles();
 		userRoles.remove(userRole);
 		user.setRoles(userRoles);
 	}
 	
 	@Override
-	public List<Users> getUsersSearch(Integer pageNo, Integer pageSize, String name) {
+	public List<User> getUsersSearch(Integer pageNo, Integer pageSize, String name) {
 
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("firstName"));
-		Page<Users> pagedResult = usersRepository.findAllByBothName(name, paging);
+		Page<User> pagedResult = usersRepository.findAllByBothName(name, paging);
 
 		int numOfSearchedUsers = usersRepository.findAllByBothNameCount(name);
 
@@ -210,7 +195,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 		if(pagedResult.hasContent()) {
 			return pagedResult.getContent();
 		} else {
-			return new ArrayList<Users>();
+			return new ArrayList<User>();
 		}
 	}
 
@@ -222,7 +207,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	@Override
 	public void addWorkingUnitToUser(String username, String workingunitname) {
 		log.info("Adding Working Unit {} to the user {}", workingunitname , username);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		WorkingUnits workingUnits =  workingUnitsRepository.findByUnitName(workingunitname);
 		user.setWorkingUnit(workingUnits);
 	}
@@ -232,14 +217,14 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	@Override
 	public void addTelephone(String username, String telephone) {
 		log.info("Adding telephone {} to the user {}" , username, telephone);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		user.setTelephone(telephone);
 	}
 
 	@Override
 	public void addEmail(String username, String email) {
 		log.info("Adding Email {} to the user {}" , email, username);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		user.setEmail(email);
 
 	}
@@ -247,35 +232,35 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	@Override
 	public void addFirstName(String username, String firstname) {
 		log.info("Adding First Name {} to the user {}" , firstname, username);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		user.setFirstName(firstname);
 	}
 
 	@Override
 	public void addLastName(String username, String lastname) {
 		log.info("Adding Last Name {} to the user {}" , lastname, username);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		user.setLastName(lastname);
 	}
 
 	@Override
 	public void ChangeActivityForUser(String username, Boolean active) {
 		log.info("Changing activity {} for the user {}" , active, username);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		user.setUserActive(active);
 	}
 	
 	@Override
 	public void addUsername(String usernameact, String username) {
 		log.info("Changing Username {} for the user {}" , username, usernameact);
-		Users user = usersRepository.findByUsername(usernameact);
+		User user = usersRepository.findByUsername(usernameact);
 		user.setUsername(username);
 	}
 	
 	@Override
 	public void addPassword(String username, String password) {
 		log.info("Changing password for the user {}" , username);
-		Users user = usersRepository.findByUsername(username);
+		User user = usersRepository.findByUsername(username);
 		user.setPassword(passwordEncoder.encode(password));
 	}
 	
@@ -286,7 +271,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 		log.info("Changing profile for the user {} **firstname,lastname"
 				+ ",telephone,email**" , usernameact);
 		
-		Users user = usersRepository.findByUsername(usernameact);
+		User user = usersRepository.findByUsername(usernameact);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setTelephone(telephone);
@@ -323,8 +308,8 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 		return usersRepository.findByUsername(username).getTelephone();
 	}
 	
-    public String confirmReset(Users user) {
-		Users userExist = usersRepository.findByUsername(user.getUsername()); 
+    public String confirmReset(User user) {
+		User userExist = usersRepository.findByUsername(user.getUsername());
 		
 		if (userExist == null) {
 			throw new UsernameNotFoundException("Username is not valid.");
@@ -339,7 +324,7 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	@Override
 	public String resetPassword(String username) {
 		
-		Users user = new Users();
+		User user = new User();
 		user = usersRepository.findByUsername(username);
 				
 		boolean isValidEmail = emailValidator.test(user.getEmail());
@@ -401,5 +386,15 @@ public class CustomUserDetailService implements UsersService, UserDetailsService
 	public Integer getNumOfUsers() {
 		Integer num = (int) usersRepository.count();
 		return num;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = usersRepository.findByUsername(username);
+		ArrayList<GrantedAuthority> authorities = (ArrayList<GrantedAuthority>) user.getRoles().stream().map(role -> {
+			GrantedAuthority authority = new SimpleGrantedAuthority(role.getName());
+			return authority;
+		}).collect(Collectors.toList());
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
 	}
 }

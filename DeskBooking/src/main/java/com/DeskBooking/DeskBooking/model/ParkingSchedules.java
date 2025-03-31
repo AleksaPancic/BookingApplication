@@ -32,12 +32,12 @@ public class ParkingSchedules {
 	private Date dateTo;
 	@ManyToOne
 	@JoinColumn(name = "User_ID", nullable = true)
-	private Users user;
+	private User user;
 	@ManyToOne
 	@JoinColumn(name = "Parking_Id", nullable = true)
 	private Parking parking;
 	
-	public ParkingSchedules(boolean status, Date dateFrom, Date dateTo, Users user, Parking parking) {
+	public ParkingSchedules(boolean status, Date dateFrom, Date dateTo, User user, Parking parking) {
 		this.status = status;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;

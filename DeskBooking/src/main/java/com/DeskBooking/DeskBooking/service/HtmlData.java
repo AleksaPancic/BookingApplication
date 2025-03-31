@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HtmlData {
 	
-	public String confirmedRegistration() {
+	public String confirmedRegistration() { //This should be done from file reader, lol, refactor this sh1t
 		return "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n"
 				+ "<html xmlns:th=\"http://www.thymeleaf.org\" xmlns=\"http://www.w3.org/1999/xhtml\">\r\n"
 				+ "    <head>\r\n"

@@ -11,7 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 
-import com.DeskBooking.DeskBooking.model.Users;
+import com.DeskBooking.DeskBooking.model.User;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,9 +48,9 @@ public class ConfirmationToken {
 	
 	@ManyToOne
 	@JoinColumn(nullable = false, name = "user_id")
-	private Users user;
+	private User user;
 	
-	public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, Users user) {
+	public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, User user) {
 		this.token = token;
 		this.createdAt = createdAt;
 		this.expiresAt = expiredAt;

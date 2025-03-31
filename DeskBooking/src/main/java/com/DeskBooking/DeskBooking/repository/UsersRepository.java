@@ -10,18 +10,18 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.DeskBooking.DeskBooking.model.Users;
+import com.DeskBooking.DeskBooking.model.User;
 
 @Repository
 @Transactional(readOnly = true)
-public interface UsersRepository extends JpaRepository<Users, Long>, PagingAndSortingRepository<Users, Long> {
-	Users findByUsername(String username);
+public interface UsersRepository extends JpaRepository<User, Long>, PagingAndSortingRepository<User, Long> {
+	User findByUsername(String username);
 
-	@Query("select u from Users u where (upper(u.firstName) like concat('%', upper(:name),'%')) or (upper(u.lastName) like concat('%', upper(:name),'%'))")
-	Page<Users> findAllByBothName(String name, Pageable page);
+	@Query("select u from User u where (upper(u.firstName) like concat('%', upper(:name),'%')) or (upper(u.lastName) like concat('%', upper(:name),'%'))")
+	Page<User> findAllByBothName(String name, Pageable page);
 
-	@Query("select count(u) from Users u where (upper(u.firstName) like concat('%', upper(:name),'%')) or (upper(u.lastName) like concat('%', upper(:name),'%'))")
+	@Query("select count(u) from User u where (upper(u.firstName) like concat('%', upper(:name),'%')) or (upper(u.lastName) like concat('%', upper(:name),'%'))")
 	int findAllByBothNameCount(String name);
 
-	List<Users> findAllByFirstName(String firstName, Pageable paging);
+	List<User> findAllByFirstName(String firstName, Pageable paging);
 }

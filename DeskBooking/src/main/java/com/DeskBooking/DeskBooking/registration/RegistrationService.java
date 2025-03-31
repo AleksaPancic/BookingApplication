@@ -17,7 +17,7 @@ import com.DeskBooking.DeskBooking.exception.PasswordNumberException;
 import com.DeskBooking.DeskBooking.exception.PasswordSpaceException;
 import com.DeskBooking.DeskBooking.exception.SpecialCharacterException;
 import com.DeskBooking.DeskBooking.model.Mail;
-import com.DeskBooking.DeskBooking.model.Users;
+import com.DeskBooking.DeskBooking.model.User;
 import com.DeskBooking.DeskBooking.registration.Token.ConfirmationToken;
 import com.DeskBooking.DeskBooking.registration.Token.ConfirmationTokenService;
 import com.DeskBooking.DeskBooking.repository.RoleRepository;
@@ -138,7 +138,7 @@ public class RegistrationService {
 		String encodedPassword = passwordEncoder.encode(request.getPassword());
 		
 		//confirmation token
-		String token = customUserDetailService.signUpUser(new Users(request.getUsername() ,request.getFirstName(), request.getLastName(), request.getEmail(), 
+		String token = customUserDetailService.signUpUser(new User(request.getUsername() ,request.getFirstName(), request.getLastName(), request.getEmail(),
 		encodedPassword, request.getTelephone(), date, false, workingUnitsRepository.findByUnitName(request.getWorkingUnitName()),
 		Arrays.asList(roleRepository.findByName("ROLE_USER"))));
 		

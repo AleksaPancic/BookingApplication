@@ -29,7 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.DeskBooking.DeskBooking.exception.InvalidInputException;
 import com.DeskBooking.DeskBooking.model.Roles;
-import com.DeskBooking.DeskBooking.model.Users;
+import com.DeskBooking.DeskBooking.model.User;
 import com.DeskBooking.DeskBooking.service.CustomUserDetailService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -51,7 +51,7 @@ public class UsersController {
 	
 	
 	@GetMapping("/view")
-	public ResponseEntity<Users> viewTestProfile(Principal principal){
+	public ResponseEntity<User> viewTestProfile(Principal principal){
 		return ResponseEntity.ok().body(usersService.getUser(principal.getName()));
 	}
 	
@@ -87,21 +87,21 @@ public class UsersController {
 	}
 			
 	@GetMapping("view/user/list")
-	public ResponseEntity<List<Users>> getUsers(		
+	public ResponseEntity<List<User>> getUsers(
 			@RequestParam(defaultValue = "0") Integer pageNo, 
 	        @RequestParam(defaultValue = "5") Integer pageSize){
-		 List<Users> list = usersService.getUsers(pageNo, pageSize);
-	 return new ResponseEntity<List<Users>>(list, HttpStatus.OK);
+		 List<User> list = usersService.getUsers(pageNo, pageSize);
+	 return new ResponseEntity<List<User>>(list, HttpStatus.OK);
 	}
 
 	@GetMapping("/view/user/search")
-	public ResponseEntity<List<Users>> getUsersSearch(
+	public ResponseEntity<List<User>> getUsersSearch(
 			@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "5") Integer pageSize,
 			@RequestParam String name) {
 
-		List<Users> list = usersService.getUsersSearch(pageNo, pageSize, name);
-		return new ResponseEntity<List<Users>>(list, HttpStatus.OK);
+		List<User> list = usersService.getUsersSearch(pageNo, pageSize, name);
+		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
 	}
 	
 	//return number of users
@@ -112,7 +112,7 @@ public class UsersController {
 	}
 		
 	@PostMapping("/update/user")
-	public ResponseEntity<Users> saveUser(@RequestBody Users user){
+	public ResponseEntity<User> saveUser(@RequestBody User user){
 		URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/update").toUriString());
 		return ResponseEntity.created(uri).body(usersService.saveUser(user));
 	}
@@ -141,7 +141,7 @@ public class UsersController {
 	                JWTVerifier verifier = JWT.require(algorithm).build();
 	                DecodedJWT decodedJWT = verifier.verify(refresh_token);
 	                String username = decodedJWT.getSubject();
-	                Users user = usersService.getUser(username);
+	                User user = usersService.getUser(username);
 	                String access_token = JWT.create()
 	                        .withSubject(user.getUsername())
 	                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))

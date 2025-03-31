@@ -32,12 +32,12 @@ public class Schedules {
 	private Date dateTo;
 	@ManyToOne
 	@JoinColumn(name = "User_ID", nullable = true)
-	private Users user;
+	private User user;
 	@ManyToOne
 	@JoinColumn(name = "Desk_Id", nullable = true)
 	private Desks desk;
 	
-	public Schedules(boolean status, Date dateFrom, Date dateTo, Users user, Desks desk) {
+	public Schedules(boolean status, Date dateFrom, Date dateTo, User user, Desks desk) {
 		this.status = status;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
