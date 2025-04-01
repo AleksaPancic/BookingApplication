@@ -1,7 +1,7 @@
 package com.DeskBooking.DeskBooking.controller;
 
 import com.DeskBooking.DeskBooking.DTO.ShortScheduleInformation;
-import com.DeskBooking.DeskBooking.service.SchedulesServiceImpl;
+import com.DeskBooking.DeskBooking.service.impl.SchedulesServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
 import org.json.JSONObject;

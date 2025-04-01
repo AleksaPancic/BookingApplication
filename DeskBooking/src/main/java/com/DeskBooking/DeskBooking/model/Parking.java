@@ -32,9 +32,9 @@ public class Parking {
     private Boolean available;
     @ManyToOne
     @JoinColumn(name = "WorkingUnit_Id")
-    private WorkingUnits workingUnit;
+    private WorkingUnit workingUnit;
     
-	public Parking(String name, Boolean available, WorkingUnits workingUnit) {
+	public Parking(String name, Boolean available, WorkingUnit workingUnit) {
 		this.name = name;
 		this.available = available;
 		this.workingUnit = workingUnit;

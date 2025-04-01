@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.DeskBooking.DeskBooking.controller.request.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +24,15 @@ import com.DeskBooking.DeskBooking.DTO.AnalyticScheduleInformation;
 import com.DeskBooking.DeskBooking.DTO.TopMostUsedDesks;
 import com.DeskBooking.DeskBooking.DTO.TopMostUsedOffices;
 import com.DeskBooking.DeskBooking.exception.DateLengthIsNotAvailableException;
-import com.DeskBooking.DeskBooking.model.Desks;
+import com.DeskBooking.DeskBooking.model.Desk;
 import com.DeskBooking.DeskBooking.model.Offices;
 import com.DeskBooking.DeskBooking.model.Parking;
 import com.DeskBooking.DeskBooking.repository.SchedulesRepository;
 import com.DeskBooking.DeskBooking.repository.WorkingUnitsRepository;
-import com.DeskBooking.DeskBooking.service.CustomUserDetailService;
-import com.DeskBooking.DeskBooking.service.DesksServiceImpl;
-import com.DeskBooking.DeskBooking.service.OfficesServiceImpl;
-import com.DeskBooking.DeskBooking.service.ParkingServiceImpl;
+import com.DeskBooking.DeskBooking.service.impl.CustomUserDetailService;
+import com.DeskBooking.DeskBooking.service.impl.DesksServiceImpl;
+import com.DeskBooking.DeskBooking.service.impl.OfficesServiceImpl;
+import com.DeskBooking.DeskBooking.service.impl.ParkingServiceImpl;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -50,14 +51,14 @@ public class AdminController {
 
 	//USER OPTIONS 
 	@PostMapping("/activate/users")
-	ResponseEntity<?> setActiveUser(@RequestBody UpdateForm form){
+	ResponseEntity<?> setActiveUser(@RequestBody UpdateFormRequest form){
 		usersService.ChangeActivityForUser(form.getUsername(), true);
 		return ResponseEntity.ok().build();
 
 	}
 	
 	@PostMapping("/disable/users")
-	ResponseEntity<?> setDisableUser(@RequestBody UpdateForm form){
+	ResponseEntity<?> setDisableUser(@RequestBody UpdateFormRequest form){
 		usersService.ChangeActivityForUser(form.getUsername(), false);
 		return ResponseEntity.ok().build();
 
@@ -66,28 +67,28 @@ public class AdminController {
 	//DESKS OPTIONS
 	
 	@PostMapping("/activate/desks")
-	ResponseEntity<?> setActiveDesk(@RequestBody DesksData form){
+	ResponseEntity<?> setActiveDesk(@RequestBody DeskDataRequest form){
 		desksService.changeActivity(form.getName(), true);
 		return ResponseEntity.ok().build();
 		
 	}
 	
 	@PostMapping("/disable/desks")
-	ResponseEntity<?> setDisableDesk(@RequestBody DesksData form){
+	ResponseEntity<?> setDisableDesk(@RequestBody DeskDataRequest form){
 		desksService.changeActivity(form.getName(), false);
 		return ResponseEntity.ok().build();
 
 	}
 	
 	@PostMapping("/add/desks")
-	ResponseEntity<?> addDesk(@RequestBody Desks desk){
+	ResponseEntity<?> addDesk(@RequestBody Desk desk){
 		desksService.saveDesk(desk);
 		return ResponseEntity.ok().build();
 
 	}
 	
 	@PostMapping("/remove/desks")
-	ResponseEntity<?> removeDesk(@RequestBody DesksData form){
+	ResponseEntity<?> removeDesk(@RequestBody DeskDataRequest form){
 		desksService.removeDesk(form.getName());
 		return ResponseEntity.ok().build();
 
@@ -95,14 +96,14 @@ public class AdminController {
 	//OFFICE OPTIONS
 	
 	@PostMapping("/activate/offices")
-	ResponseEntity<?> setActiveOffice(@RequestBody OfficeData form){
+	ResponseEntity<?> setActiveOffice(@RequestBody OfficeDataRequest form){
 		officesService.changeActivity(form.getName(), true);
 		return ResponseEntity.ok().build();
 	
 	}
 	
 	@PostMapping("/disable/offices")
-	ResponseEntity<?> setDisableOffice(@RequestBody OfficeData form){
+	ResponseEntity<?> setDisableOffice(@RequestBody OfficeDataRequest form){
 		officesService.changeActivity(form.getName(), false);
 		return ResponseEntity.ok().build();
 		
@@ -116,7 +117,7 @@ public class AdminController {
 	}
 	
 	@PostMapping("/remove/offices")
-	ResponseEntity<?> removeOffice(@RequestBody OfficeData form){
+	ResponseEntity<?> removeOffice(@RequestBody OfficeDataRequest form){
 		//officesService.removeSchedule(form.getName());
 		officesService.removeDesks(form.getName());
 		officesService.removeOffice(form.getName());
@@ -126,14 +127,14 @@ public class AdminController {
 	//PARKING OPTIONS
 	
 	@PostMapping("/activate/parking")
-	ResponseEntity<?> setActiveParking(@RequestBody ParkingData form){
+	ResponseEntity<?> setActiveParking(@RequestBody ParkingDataRequest form){
 		parkingService.changeActivity(form.getName(), true);
 		return ResponseEntity.ok().build();
 	
 	}
 	
 	@PostMapping("/disable/parking")
-	ResponseEntity<?> setDisableParking(@RequestBody ParkingData form){
+	ResponseEntity<?> setDisableParking(@RequestBody ParkingDataRequest form){
 		parkingService.changeActivity(form.getName(), false);
 		return ResponseEntity.ok().build();
 		
@@ -147,7 +148,7 @@ public class AdminController {
 	}
 	
 	@PostMapping("/remove/parking")
-	ResponseEntity<?> removeParking(@RequestBody ParkingData form){
+	ResponseEntity<?> removeParking(@RequestBody ParkingDataRequest form){
 		parkingService.removeParking(form.getName());
 		return ResponseEntity.ok().build();
 	}
@@ -156,7 +157,7 @@ public class AdminController {
 	//return number of total, regular, canceled and avg schedules per working unit
 	//params: dateLength: 30, 7 or 1
 	@PostMapping("/anaylitic/schedules")
-	public List<AnalyticScheduleInformation> getAnayliticSchedules(@RequestBody DateInfo dateLength) {
+	public List<AnalyticScheduleInformation> getAnayliticSchedules(@RequestBody DateInfoRequest dateLength) {
 		LocalDate myDateFrom = LocalDate.now();
 		LocalDate myDateTo = LocalDate.now();
 		LocalTime minLocalTime = LocalTime.MIN; 
@@ -215,7 +216,7 @@ public class AdminController {
 	//return list of top used offices per working unit
 	//params: dateLength: 30, 7 or 1
 	@PostMapping("/anaylitic/top/offices")
-	public List<List<TopMostUsedOffices>> getTopUsedOffices(@RequestBody DateInfo dateLength) {
+	public List<List<TopMostUsedOffices>> getTopUsedOffices(@RequestBody DateInfoRequest dateLength) {
 		LocalDate myDateFrom = LocalDate.now();
 		LocalDate myDateTo = LocalDate.now();
 		LocalTime minLocalTime = LocalTime.MIN; 
@@ -248,7 +249,7 @@ public class AdminController {
 	//return list of top used desks per working unit
 	//params: dateLength: 30, 7 or 1
 	@PostMapping("/anaylitic/top/desks")
-	public List<List<TopMostUsedDesks>> getTopUsedDesks(@RequestBody DateInfo dateLength) {
+	public List<List<TopMostUsedDesks>> getTopUsedDesks(@RequestBody DateInfoRequest dateLength) {
 		LocalDate myDateFrom = LocalDate.now();
 		LocalDate myDateTo = LocalDate.now();
 		LocalTime minLocalTime = LocalTime.MIN; 
@@ -281,7 +282,7 @@ public class AdminController {
 	//return number of total, regular, canceled, avg schedules and enabled and disabled parking per working unit
 	//params: dateLength: 30, 7 or 1
 	@PostMapping("/anaylitic/parking")
-	public List<AnalyticParkingScheduleInformation> getAnayliticParkingSchedules(@RequestBody DateInfo dateLength) {
+	public List<AnalyticParkingScheduleInformation> getAnayliticParkingSchedules(@RequestBody DateInfoRequest dateLength) {
 		LocalDate myDateFrom = LocalDate.now();
 		LocalDate myDateTo = LocalDate.now();
 		LocalTime minLocalTime = LocalTime.MIN; 
@@ -316,28 +317,5 @@ public class AdminController {
 	}
 		
 	
-}
-@Data
-class DesksData {
-	private String name;
-}
-@Data 
-class OfficeData{
-	private String name;
-}
-@Data
-class ParkingData{
-	private String name;
-}
-
-@Data
-class WorkingUnitData {
-	private String workingUnitName;
-	private Long workingUnitId;
-}
-
-@Data
-class DateInfo {
-	private Long dateLength;
 }
 

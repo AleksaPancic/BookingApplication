@@ -1,4 +1,4 @@
-package com.DeskBooking.DeskBooking.registration.Token;
+package com.DeskBooking.DeskBooking.registration.token;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

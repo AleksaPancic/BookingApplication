@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.DeskBooking.DeskBooking.model.Offices;
-import com.DeskBooking.DeskBooking.service.OfficesServiceImpl;
+import com.DeskBooking.DeskBooking.service.impl.OfficesServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 

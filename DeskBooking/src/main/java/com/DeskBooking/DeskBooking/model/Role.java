@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-public class Roles {
+public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "role_id")
@@ -24,7 +24,7 @@ public class Roles {
 	@Column(name = "name")
 	private String name;
 	
-	public Roles(String name) {
+	public Role(String name) {
 		this.name = name;
 	}
 	

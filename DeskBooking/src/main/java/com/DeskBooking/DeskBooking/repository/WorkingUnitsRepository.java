@@ -8,14 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.DeskBooking.DeskBooking.model.WorkingUnits;
+import com.DeskBooking.DeskBooking.model.WorkingUnit;
 
 @Repository
 @Transactional
-public interface WorkingUnitsRepository extends JpaRepository<WorkingUnits, Long> {
-	WorkingUnits findByUnitName(String unitName);
-	Optional<WorkingUnits> findById(Long id);
+public interface WorkingUnitsRepository extends JpaRepository<WorkingUnit, Long> {
+	WorkingUnit findByUnitName(String unitName);
+	Optional<WorkingUnit> findById(Long id);
 	
-	@Query("select count(w.id) from WorkingUnits w where w.parkingMap != null")
+	@Query("select count(w.id) from WorkingUnit w where w.parkingMap != null")
 	Long findByMaps();
 }

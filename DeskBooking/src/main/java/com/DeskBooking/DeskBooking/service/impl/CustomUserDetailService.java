@@ -1,4 +1,4 @@
-package com.DeskBooking.DeskBooking.service;
+package com.DeskBooking.DeskBooking.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.DeskBooking.DeskBooking.service.EmailSenderService;
+import com.DeskBooking.DeskBooking.service.HtmlData;
+import com.DeskBooking.DeskBooking.service.UsersService;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,15 +24,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.DeskBooking.DeskBooking.model.Mail;
-import com.DeskBooking.DeskBooking.model.Roles;
+import com.DeskBooking.DeskBooking.model.Role;
 import com.DeskBooking.DeskBooking.model.User;
-import com.DeskBooking.DeskBooking.model.WorkingUnits;
+import com.DeskBooking.DeskBooking.model.WorkingUnit;
 import com.DeskBooking.DeskBooking.repository.RoleRepository;
 import com.DeskBooking.DeskBooking.repository.UsersRepository;
 import com.DeskBooking.DeskBooking.repository.WorkingUnitsRepository;
 import com.DeskBooking.DeskBooking.exception.UserNotFoundException;
 import com.DeskBooking.DeskBooking.exception.UsernameAlredyTakenException;
-import com.DeskBooking.DeskBooking.registration.Token.*;
+import com.DeskBooking.DeskBooking.registration.token.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +51,6 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 	private final PasswordEncoder passwordEncoder;
 	private final ConfirmationTokenService confirmationTokenService;
 	private final EmailSenderService emailSenderService;
-	private final EmailValidator emailValidator;
 	private final HtmlData htmlData;
 	private String password;
     
@@ -77,7 +79,7 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 
     
     
-   private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Roles> roles)
+   private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles)
    {
 	   
 	  return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
@@ -95,7 +97,7 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 	}
 	
 	@Override
-	public Roles saveRole(Roles role) {
+	public Role saveRole(Role role) {
 		log.info("Saving new role {} to the database", role.getName());
 		return roleRepository.save(role);
 	}
@@ -103,7 +105,7 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 	public void addRoleToUser(String username, String roleName) {
 		log.info("Adding role {} to the user {}", roleName , username);
 		User user = usersRepository.findByUsername(username);
-		Roles role = roleRepository.findByName(roleName);
+		Role role = roleRepository.findByName(roleName);
 		user.getRoles().add(role);
 	}
 	@Override
@@ -151,9 +153,9 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 
 	@Override
 	public void addAdminRole(User user) {
-		Roles adminRole = roleRepository.findByName("ROLE_ADMIN");
-		Roles userRole = roleRepository.findByName("ROLE_USER");
-		List<Roles> userRoles = user.getRoles();
+		Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+		Role userRole = roleRepository.findByName("ROLE_USER");
+		List<Role> userRoles = user.getRoles();
 		userRoles.remove(userRole);
 		userRoles.add(adminRole);
 		user.setRoles(userRoles);
@@ -161,24 +163,24 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 
 	@Override
 	public void removeAdminRole(User user) {
-		Roles adminRole = roleRepository.findByName("ROLE_ADMIN");
-		List<Roles> userRoles = user.getRoles();
+		Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+		List<Role> userRoles = user.getRoles();
 		userRoles.remove(adminRole);
 		user.setRoles(userRoles);
 	}
 	
 	@Override
 	public void removeSuperAdminRole(User user) {
-		Roles superAdminRole = roleRepository.findByName("ROLE_ENJOYING_ADMIN");
-		List<Roles> userRoles = user.getRoles();
+		Role superAdminRole = roleRepository.findByName("ROLE_ENJOYING_ADMIN");
+		List<Role> userRoles = user.getRoles();
 		userRoles.remove(superAdminRole);
 		user.setRoles(userRoles);
 	}
 	
 	@Override
 	public void removeUserRole(User user) {
-		Roles userRole = roleRepository.findByName("ROLE_USER");
-		List<Roles> userRoles = user.getRoles();
+		Role userRole = roleRepository.findByName("ROLE_USER");
+		List<Role> userRoles = user.getRoles();
 		userRoles.remove(userRole);
 		user.setRoles(userRoles);
 	}
@@ -208,8 +210,8 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 	public void addWorkingUnitToUser(String username, String workingunitname) {
 		log.info("Adding Working Unit {} to the user {}", workingunitname , username);
 		User user = usersRepository.findByUsername(username);
-		WorkingUnits workingUnits =  workingUnitsRepository.findByUnitName(workingunitname);
-		user.setWorkingUnit(workingUnits);
+		WorkingUnit workingUnit =  workingUnitsRepository.findByUnitName(workingunitname);
+		user.setWorkingUnit(workingUnit);
 	}
 	
 	
@@ -326,11 +328,6 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 		
 		User user = new User();
 		user = usersRepository.findByUsername(username);
-				
-		boolean isValidEmail = emailValidator.test(user.getEmail());
-		if(!isValidEmail) {
-			throw new IllegalStateException("email not valid");
-		}
 		
 		int leftLimit = 97; // letter 'a'
 	    int rightLimit = 122; // letter 'z'

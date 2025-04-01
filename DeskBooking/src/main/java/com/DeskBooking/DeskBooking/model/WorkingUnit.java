@@ -20,7 +20,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Entity
 @Table(name = "Working_Units")
-public class WorkingUnits {
+public class WorkingUnit {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +45,7 @@ public class WorkingUnits {
 	@Column(name = "WorkingUnitParkingMap")
 	private String parkingMap;
 	
-	public WorkingUnits(String unitName, City city, String unitAddress, String unitPhone, String map, String parkingMap) {
+	public WorkingUnit(String unitName, City city, String unitAddress, String unitPhone, String map, String parkingMap) {
 		this.parkingMap = parkingMap;
 		this.unitName = unitName;
 		this.city = city;

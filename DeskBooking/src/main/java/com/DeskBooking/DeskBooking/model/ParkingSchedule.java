@@ -17,7 +17,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Entity
 @Table(name = "Parking_Schedules")
-public class ParkingSchedules {
+public class ParkingSchedule {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Schedule_Id")
@@ -37,7 +37,7 @@ public class ParkingSchedules {
 	@JoinColumn(name = "Parking_Id", nullable = true)
 	private Parking parking;
 	
-	public ParkingSchedules(boolean status, Date dateFrom, Date dateTo, User user, Parking parking) {
+	public ParkingSchedule(boolean status, Date dateFrom, Date dateTo, User user, Parking parking) {
 		this.status = status;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;

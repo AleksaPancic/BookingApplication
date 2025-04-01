@@ -67,14 +67,14 @@ public class User {
 	
 	@ManyToOne
 	@JoinColumn(name = "WorkingUnit_ID", nullable = true)
-	private WorkingUnits workingUnit;
+	private WorkingUnit workingUnit;
 	
 	@ManyToMany(fetch = FetchType.EAGER) //to load all the roles when user is loaded "fetch"
-	private List<Roles> roles = new ArrayList<>();
+	private List<Role> roles = new ArrayList<>();
 
 	public User(String username, String firstName, String lastName, String email, String password,
-				String telephone, Date dateOpen, Boolean userActive, WorkingUnits workingUnit,
-				List<Roles> roles) {
+				String telephone, Date dateOpen, Boolean userActive, WorkingUnit workingUnit,
+				List<Role> roles) {
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;

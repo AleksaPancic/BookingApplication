@@ -1,14 +1,15 @@
-package com.DeskBooking.DeskBooking.service;
+package com.DeskBooking.DeskBooking.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.DeskBooking.DeskBooking.service.OfficesSevice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.DeskBooking.DeskBooking.exception.OfficeNotFoundException;
-import com.DeskBooking.DeskBooking.model.Desks;
+import com.DeskBooking.DeskBooking.model.Desk;
 import com.DeskBooking.DeskBooking.model.Offices;
 import com.DeskBooking.DeskBooking.model.Schedules;
 import com.DeskBooking.DeskBooking.repository.DesksRepository;
@@ -28,7 +29,7 @@ public class OfficesServiceImpl implements OfficesSevice {
 	private final DesksRepository desksRepository;
 	private final SchedulesRepository schedulesRepository;
 	
-	ArrayList<Desks> desks = new ArrayList<Desks>();
+	ArrayList<Desk> desks = new ArrayList<Desk>();
 	
 	@Override
 	public Offices saveOffice(Offices office) {
@@ -42,7 +43,7 @@ public class OfficesServiceImpl implements OfficesSevice {
 		Offices office = officesRepository.findByName(name);		
 		
 		log.info("Changing activity {} for the office {}" , activity, name);
-		List<Desks> desks = desksRepository.findByOffice(officesRepository.findByName(name));
+		List<Desk> desks = desksRepository.findByOffice(officesRepository.findByName(name));
 		if(activity == false) {
 			log.info("Changing activity to false for all desks inside office " + name);
 			for(int i = 0; i < desks.size(); i++) {
@@ -80,7 +81,7 @@ public class OfficesServiceImpl implements OfficesSevice {
 	public void removeDesks(String name) {
 		Offices office = new Offices();
 		office = officesRepository.findByName(name);
-		List<Desks> desks = desksRepository.findByOffice(office);
+		List<Desk> desks = desksRepository.findByOffice(office);
 		
 		for(int i = 0; i < desks.size(); i++) 
 		{

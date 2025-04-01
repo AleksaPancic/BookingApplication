@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.DeskBooking.DeskBooking.model.Desks;
+import com.DeskBooking.DeskBooking.model.Desk;
 import com.DeskBooking.DeskBooking.model.Schedules;
 
 import jakarta.transaction.Transactional;
@@ -84,7 +84,7 @@ public interface SchedulesRepository extends JpaRepository<Schedules, Long>  {
     @Query("select new com.DeskBooking.DeskBooking.DTO.AnalyticDeskInformation("
     		+ "(case when d.office.workingUnit.id = null then :id else d.office.workingUnit.id end),"
     		+ "sum(case when d.available = true then 1 else 0 end), sum(case when d.available = false then 1 else 0 end))"
-    		+ " from Desks d"
+    		+ " from Desk d"
     		+ " where d.office.workingUnit.id = :id")
     public AnalyticDeskInformation getAnalyticDesks(Long id);
     
@@ -114,11 +114,11 @@ public interface SchedulesRepository extends JpaRepository<Schedules, Long>  {
     		+ "(case when s.parking.workingUnit.id = null then :id else s.parking.workingUnit.id end), "
     		+ "count(s.id),"
     		+ "sum(case when s.status = true then 1 else 0 end), sum(case when s.status = false then 1 else 0 end)) "
-    		+ "from ParkingSchedules s "
+    		+ "from ParkingSchedule s "
     		+ "where s.dateFrom >= :dateFrom and s.dateTo <= :dateTo and s.parking.workingUnit.id = :id")
     public AnalyticParkingScheduleInformation getAnayliticParkingSchedules(Date dateFrom, Date dateTo, Long id);
     
-    @Query("select count(*) from ParkingSchedules s where s.status = true and "
+    @Query("select count(*) from ParkingSchedule s where s.status = true and "
     		+ "s.dateFrom >= :dateFrom and s.dateTo <= :dateTo and s.parking.workingUnit.id = :id")
     public Float getAvgParkingSchedules(Date dateFrom, Date dateTo, Long id);
 
@@ -129,6 +129,6 @@ public interface SchedulesRepository extends JpaRepository<Schedules, Long>  {
     public AnalyticParkingInformation getAnalyticParking(Long id);
     
 	Optional<Schedules> findById(Long id);
-	List<Schedules> findByDesk(Desks desk);
+	List<Schedules> findByDesk(Desk desk);
 
 }

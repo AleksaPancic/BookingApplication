@@ -18,13 +18,12 @@ import com.DeskBooking.DeskBooking.exception.PasswordSpaceException;
 import com.DeskBooking.DeskBooking.exception.SpecialCharacterException;
 import com.DeskBooking.DeskBooking.model.Mail;
 import com.DeskBooking.DeskBooking.model.User;
-import com.DeskBooking.DeskBooking.registration.Token.ConfirmationToken;
-import com.DeskBooking.DeskBooking.registration.Token.ConfirmationTokenService;
+import com.DeskBooking.DeskBooking.registration.token.ConfirmationToken;
+import com.DeskBooking.DeskBooking.registration.token.ConfirmationTokenService;
 import com.DeskBooking.DeskBooking.repository.RoleRepository;
 import com.DeskBooking.DeskBooking.repository.WorkingUnitsRepository;
-import com.DeskBooking.DeskBooking.service.CustomUserDetailService;
+import com.DeskBooking.DeskBooking.service.impl.CustomUserDetailService;
 import com.DeskBooking.DeskBooking.service.EmailSenderService;
-import com.DeskBooking.DeskBooking.service.EmailValidator;
 import com.DeskBooking.DeskBooking.service.HtmlData;
 
 import lombok.RequiredArgsConstructor;
@@ -42,14 +41,9 @@ public class RegistrationService {
 	
 	private final EmailSenderService emailSenderService;
 	private final ConfirmationTokenService confirmationTokenService;
-	private final EmailValidator emailValidator;
 	private final HtmlData htmlData;
 	
 	public String register(RegistrationRequest request) throws Exception {
-		boolean isValidEmail = emailValidator.test(request.getEmail());
-		if(!isValidEmail) {
-			throw new IllegalStateException("email not valid");
-		}
 		
 		Date date = new Date();
 		

@@ -1,13 +1,15 @@
-package com.DeskBooking.DeskBooking.service;
+package com.DeskBooking.DeskBooking.service.impl;
 
 import java.nio.charset.StandardCharsets;
 
+import com.DeskBooking.DeskBooking.service.EmailSenderService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,6 +28,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 	
 	@Autowired
 	private SpringTemplateEngine templateEngine;
+
+	@Value(value = "${spring.mail.username}")
+	private String mailFrom;
 	
 	private final static Logger log = LoggerFactory.getLogger(EmailSenderServiceImpl.class);
 	
@@ -46,7 +51,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 			helper.setTo(mail.getMailTo());
 			helper.setText(html, true);
 			helper.setSubject("Deskbooking email confirmation");
-			helper.setFrom("helpdesk@enjoying.rs");
+			helper.setFrom(mailFrom);
 			
 			mailSender.send(mimeMessage);
 			log.info("Email sent successfuly!");
@@ -75,8 +80,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 			helper.setTo(mail.getMailTo());
 			helper.setText(html, true);
 			helper.setSubject("Deskbooking email confirmation");
-			helper.setFrom("helpdesk@enjoying.rs");
-			
+			helper.setFrom(mailFrom);
+
 			mailSender.send(mimeMessage);
 			log.info("Email sent successfuly!");
 			

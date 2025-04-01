@@ -1,15 +1,16 @@
-package com.DeskBooking.DeskBooking.service;
+package com.DeskBooking.DeskBooking.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.DeskBooking.DeskBooking.service.ParkingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.DeskBooking.DeskBooking.exception.ParkingNotFoundException;
 import com.DeskBooking.DeskBooking.model.Parking;
-import com.DeskBooking.DeskBooking.model.ParkingSchedules;
+import com.DeskBooking.DeskBooking.model.ParkingSchedule;
 import com.DeskBooking.DeskBooking.repository.ParkingRepository;
 import com.DeskBooking.DeskBooking.repository.ParkingSchedulesRepository;
 
@@ -66,7 +67,7 @@ public class ParkingServiceImpl implements ParkingService {
 
 	
 	@Override
-	public ParkingSchedules saveSchedules(ParkingSchedules parkingSchedules) {
-		return parkingSchedulesRepository.save(parkingSchedules);
+	public ParkingSchedule saveSchedules(ParkingSchedule parkingSchedule) {
+		return parkingSchedulesRepository.save(parkingSchedule);
 	}
 }

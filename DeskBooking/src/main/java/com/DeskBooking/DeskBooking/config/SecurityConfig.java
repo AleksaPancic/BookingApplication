@@ -1,47 +1,28 @@
 package com.DeskBooking.DeskBooking.config;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-
-import com.DeskBooking.DeskBooking.registration.Token.ConfirmationTokenService;
+import com.DeskBooking.DeskBooking.registration.token.ConfirmationTokenService;
 import com.DeskBooking.DeskBooking.repository.RoleRepository;
 import com.DeskBooking.DeskBooking.repository.UsersRepository;
 import com.DeskBooking.DeskBooking.repository.WorkingUnitsRepository;
-import com.DeskBooking.DeskBooking.service.CustomUserDetailService;
+import com.DeskBooking.DeskBooking.service.impl.CustomUserDetailService;
 import com.DeskBooking.DeskBooking.service.EmailSenderService;
-import com.DeskBooking.DeskBooking.service.EmailValidator;
 import com.DeskBooking.DeskBooking.service.HtmlData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.annotation.Order;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 //import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
-import org.springframework.stereotype.Component;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.CorsUtils;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.DeskBooking.DeskBooking.jwt.AuthenticationFilter;
 import com.DeskBooking.DeskBooking.jwt.AuthorizationFilter;
@@ -60,7 +41,6 @@ public class SecurityConfig {
 	private final WorkingUnitsRepository workingUnitsRepository;
 	private final ConfirmationTokenService confirmationTokenService;
 	private final EmailSenderService emailSenderService;
-	private final EmailValidator emailValidator;
 	private final HtmlData htmlData;
 
 	@Bean
@@ -96,7 +76,7 @@ public class SecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new CustomUserDetailService(usersRepository, roleRepository, workingUnitsRepository, passwordEncoder(), confirmationTokenService, emailSenderService, emailValidator, htmlData);
+		return new CustomUserDetailService(usersRepository, roleRepository, workingUnitsRepository, passwordEncoder(), confirmationTokenService, emailSenderService, htmlData);
 	}
 
 	@Bean

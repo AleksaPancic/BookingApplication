@@ -10,12 +10,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.DeskBooking.DeskBooking.model.Parking;
-import com.DeskBooking.DeskBooking.model.WorkingUnits;
+import com.DeskBooking.DeskBooking.model.WorkingUnit;
 
 @Repository
 @Transactional(readOnly = true)
 public interface ParkingRepository extends JpaRepository<Parking, Long> {
 	Optional<Parking> findById(Long id);
-	List<Parking> findByWorkingUnit(WorkingUnits workingunit);
+	List<Parking> findByWorkingUnit(WorkingUnit workingunit);
 	Parking findByName(String name);
 }

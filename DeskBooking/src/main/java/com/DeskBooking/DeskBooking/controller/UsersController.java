@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.DeskBooking.DeskBooking.controller.request.PasswordToUserFormRequest;
+import com.DeskBooking.DeskBooking.controller.request.RoleToUserFormRequest;
+import com.DeskBooking.DeskBooking.controller.request.UpdateFormRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -28,9 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.DeskBooking.DeskBooking.exception.InvalidInputException;
-import com.DeskBooking.DeskBooking.model.Roles;
+import com.DeskBooking.DeskBooking.model.Role;
 import com.DeskBooking.DeskBooking.model.User;
-import com.DeskBooking.DeskBooking.service.CustomUserDetailService;
+import com.DeskBooking.DeskBooking.service.impl.CustomUserDetailService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -57,7 +60,7 @@ public class UsersController {
 	
 			
 	@PostMapping("/update") 
-	public ResponseEntity<?> updateUser(@RequestBody UpdateForm form, Principal principle) throws Exception{
+	public ResponseEntity<?> updateUser(@RequestBody UpdateFormRequest form, Principal principle) throws Exception{
 		if(form.getEmail().chars().count() > 0 && form.getFirstName().chars().count() > 0 && form.getLastName().chars().count() > 0 &&
 				form.getTelephone().chars().count() > 0 && form.getWorkingUnit().chars().count() > 0 && form.getEmail().contains("@enjoying.rs"))
 		{
@@ -77,7 +80,7 @@ public class UsersController {
 	}
 		
 	@PostMapping("/update/password")
-	public ResponseEntity<?> updatePassword(@RequestBody PasswordToUserForm form, Principal principal) throws Exception{
+	public ResponseEntity<?> updatePassword(@RequestBody PasswordToUserFormRequest form, Principal principal) throws Exception{
 		if(form.getPassword().chars().count() > 4) {
 		usersService.addPassword(principal.getName(), form.getPassword());
 		return ResponseEntity.ok().build();
@@ -118,13 +121,13 @@ public class UsersController {
 	}
 	
 	@PostMapping("/update/user/role")
-	public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form){
+	public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserFormRequest form){
 		usersService.addRoleToUser(form.getUsername(), form.getRoleName());
 		return ResponseEntity.ok().build();
 	}
 	
 	@PostMapping("/update/user/password")
-	public ResponseEntity<?> addPasswordToUser(@RequestBody PasswordToUserForm form){
+	public ResponseEntity<?> addPasswordToUser(@RequestBody PasswordToUserFormRequest form){
 		usersService.addPassword(form.getUsername(), form.getPassword());
 		return ResponseEntity.ok().build();
 	}
@@ -146,7 +149,7 @@ public class UsersController {
 	                        .withSubject(user.getUsername())
 	                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
 	                        .withIssuer(request.getRequestURL().toString())
-	                        .withClaim("roles", user.getRoles().stream().map(Roles::getName).collect(Collectors.toList()))
+	                        .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
 	                        .sign(algorithm);
 	                Map<String, String> tokens = new HashMap<>();
 	                tokens.put("access_token", access_token);
@@ -164,31 +167,4 @@ public class UsersController {
 	        
 	    }
 	
-}
-
-//DATA FORM 
-@Data
-class UpdateForm{
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private String workingUnit;
-	private String telephone;
-}
-
-@Data
-class RoleToUserForm{
-	private String username;
-	private String roleName;
-}
-@Data
-class ActivityToUserForm{
-	private String username;
-	private Boolean firstName;
-}
-@Data 
-class PasswordToUserForm{
-	private String username;
-	private String password;
 }

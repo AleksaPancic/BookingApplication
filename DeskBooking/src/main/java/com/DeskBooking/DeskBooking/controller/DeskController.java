@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.DeskBooking.DeskBooking.model.Desks;
-import com.DeskBooking.DeskBooking.service.DesksServiceImpl;
+import com.DeskBooking.DeskBooking.model.Desk;
+import com.DeskBooking.DeskBooking.service.impl.DesksServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +21,8 @@ public class DeskController {
 	private final DesksServiceImpl desksService;
 	
 	@GetMapping("/view/desks/list")
-	public ResponseEntity<List<Desks>> getDesks(){
-	 List<Desks> list = desksService.getDesks();
-	 return new ResponseEntity<List<Desks>>(list, HttpStatus.OK);
+	public ResponseEntity<List<Desk>> getDesks(){
+	 List<Desk> list = desksService.getDesks();
+	 return new ResponseEntity<List<Desk>>(list, HttpStatus.OK);
 	}
 }

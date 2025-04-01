@@ -1,14 +1,15 @@
-package com.DeskBooking.DeskBooking.service;
+package com.DeskBooking.DeskBooking.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.DeskBooking.DeskBooking.service.DesksService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.DeskBooking.DeskBooking.exception.DeskNotFoundException;
-import com.DeskBooking.DeskBooking.model.Desks;
+import com.DeskBooking.DeskBooking.model.Desk;
 import com.DeskBooking.DeskBooking.repository.DesksRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class DesksServiceImpl implements DesksService {
 	private final DesksRepository desksRepository;
 	
 	@Override
-	public Desks saveDesk(Desks desk) {
+	public Desk saveDesk(Desk desk) {
 		log.info("Saving desks {} to the database", desk.getName());
 		if(desksRepository.findByName(desk.getName()) != null) {
 			throw new DeskNotFoundException("Desk already exists " + desk.getName());
@@ -34,12 +35,12 @@ public class DesksServiceImpl implements DesksService {
 	@Override
 	public void changeActivity(String name, Boolean activity) {
 		log.info("Changing activity for the desk: " + name);
-		Desks desk = desksRepository.findByName(name);
+		Desk desk = desksRepository.findByName(name);
 		desk.setAvailable(activity);
 	}
 
 	@Override
-	public Optional<Desks> findById(Long id) {
+	public Optional<Desk> findById(Long id) {
 		return desksRepository.findById(id);
 	}
 
@@ -52,8 +53,8 @@ public class DesksServiceImpl implements DesksService {
 		desksRepository.delete(desksRepository.findByName(name));
 	}
 
-	public List<Desks> getDesks() {
-		return new ArrayList<Desks>(desksRepository.findAll());
+	public List<Desk> getDesks() {
+		return new ArrayList<Desk>(desksRepository.findAll());
 	}
 
 }

@@ -3,7 +3,7 @@ package com.DeskBooking.DeskBooking.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.DeskBooking.DeskBooking.model.WorkingUnits;
+import com.DeskBooking.DeskBooking.model.WorkingUnit;
 import com.DeskBooking.DeskBooking.repository.WorkingUnitsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ public class WorkingUnitsServiceImpl implements WorkingUnitsService {
 	private final WorkingUnitsRepository workingUnitsRepository;
 	
 	@Override
-	public WorkingUnits saveWorkingUnit(WorkingUnits workingUnits) {
-		log.info("Saving Working unit {} to the database", workingUnits.getUnitName());
-		return workingUnitsRepository.save(workingUnits);
+	public WorkingUnit saveWorkingUnit(WorkingUnit workingUnit) {
+		log.info("Saving Working unit {} to the database", workingUnit.getUnitName());
+		return workingUnitsRepository.save(workingUnit);
 	}
 	
 }

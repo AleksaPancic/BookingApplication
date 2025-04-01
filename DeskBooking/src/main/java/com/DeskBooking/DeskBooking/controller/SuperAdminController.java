@@ -1,8 +1,8 @@
 package com.DeskBooking.DeskBooking.controller;
 
-import com.DeskBooking.DeskBooking.model.Roles;
+import com.DeskBooking.DeskBooking.model.Role;
 import com.DeskBooking.DeskBooking.model.User;
-import com.DeskBooking.DeskBooking.service.CustomUserDetailService;
+import com.DeskBooking.DeskBooking.service.impl.CustomUserDetailService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,10 +97,10 @@ public class SuperAdminController {
     @PostMapping("/superadmin/changeAdminPrivilege")
     public String changeUserAdmin(String username, Integer pageNo, Integer pageSize, Model model) {
         User user = usersService.getUser(username);
-        List<Roles> rolesList = user.getRoles();
+        List<Role> roleList = user.getRoles();
 
-        boolean isAdmin = rolesList.stream().map(Roles::getName).anyMatch(roleName -> roleName.equals("ROLE_ADMIN"));
-        boolean isSuperAdmin = rolesList.stream().map(Roles::getName).anyMatch(roleName -> roleName.equals("ROLE_ENJOYING_ADMIN"));
+        boolean isAdmin = roleList.stream().map(Role::getName).anyMatch(roleName -> roleName.equals("ROLE_ADMIN"));
+        boolean isSuperAdmin = roleList.stream().map(Role::getName).anyMatch(roleName -> roleName.equals("ROLE_ENJOYING_ADMIN"));
 
         if (!isAdmin) {
             usersService.addAdminRole(user);

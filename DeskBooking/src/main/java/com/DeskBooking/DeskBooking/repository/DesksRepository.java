@@ -1,6 +1,6 @@
 package com.DeskBooking.DeskBooking.repository;
 
-import com.DeskBooking.DeskBooking.model.Desks;
+import com.DeskBooking.DeskBooking.model.Desk;
 import com.DeskBooking.DeskBooking.model.Offices;
 
 import java.util.List;
@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface DesksRepository extends JpaRepository<Desks, Long> {
-	Optional<Desks> findById(Long id);
-	List<Desks> findByOffice(Offices office);
-	Desks findByName(String name);
+public interface DesksRepository extends JpaRepository<Desk, Long> {
+	Optional<Desk> findById(Long id);
+	List<Desk> findByOffice(Offices office);
+	Desk findByName(String name);
 }

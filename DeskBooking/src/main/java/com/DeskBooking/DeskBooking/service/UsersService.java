@@ -3,12 +3,12 @@ package com.DeskBooking.DeskBooking.service;
 import java.util.List;
 
 
-import com.DeskBooking.DeskBooking.model.Roles;
+import com.DeskBooking.DeskBooking.model.Role;
 import com.DeskBooking.DeskBooking.model.User;
 
 public interface UsersService {
 	User saveUser(User user);
-	Roles saveRole(Roles role);
+	Role saveRole(Role role);
 	public void addUsername(String usernameact, String username);
 	public void addPassword(String username, String password);
 	public String resetPassword(String username);

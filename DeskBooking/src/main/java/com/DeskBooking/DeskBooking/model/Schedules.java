@@ -35,9 +35,9 @@ public class Schedules {
 	private User user;
 	@ManyToOne
 	@JoinColumn(name = "Desk_Id", nullable = true)
-	private Desks desk;
+	private Desk desk;
 	
-	public Schedules(boolean status, Date dateFrom, Date dateTo, User user, Desks desk) {
+	public Schedules(boolean status, Date dateFrom, Date dateTo, User user, Desk desk) {
 		this.status = status;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;

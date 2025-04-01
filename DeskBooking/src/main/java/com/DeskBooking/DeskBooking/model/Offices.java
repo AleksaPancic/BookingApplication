@@ -20,10 +20,10 @@ public class Offices {
     private String name;
     @ManyToOne
     @JoinColumn(name = "WorkingUnit_ID")
-    private WorkingUnits workingUnit;
+    private WorkingUnit workingUnit;
     @Column(name = "Available")
     private Boolean available;
-	public Offices(String name, WorkingUnits workingUnit, Boolean available) {
+	public Offices(String name, WorkingUnit workingUnit, Boolean available) {
 		this.name = name;
 		this.workingUnit = workingUnit;
 		this.available = available;

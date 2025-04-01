@@ -13,8 +13,8 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "Desks")
-public class Desks {
+@Table(name = "Desk")
+public class Desk {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Desks {
     @JoinColumn(name = "Office_Id", nullable = true)
     private Offices office;
 
-    public Desks(String name, Boolean available, Offices office) {
+    public Desk(String name, Boolean available, Offices office) {
         this.name = name;
         this.available = available;
         this.office = office;

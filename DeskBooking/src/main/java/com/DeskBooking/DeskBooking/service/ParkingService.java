@@ -3,7 +3,7 @@ package com.DeskBooking.DeskBooking.service;
 import java.util.Optional;
 
 import com.DeskBooking.DeskBooking.model.Parking;
-import com.DeskBooking.DeskBooking.model.ParkingSchedules;
+import com.DeskBooking.DeskBooking.model.ParkingSchedule;
 
 public interface ParkingService {
 	public Parking saveParking(Parking parking);
@@ -11,5 +11,5 @@ public interface ParkingService {
 	public Parking findByName(String name);
 	public void removeParking(String name);
 	void changeActivity(String name, Boolean activity);
-	ParkingSchedules saveSchedules(ParkingSchedules parkingSchedules);
+	ParkingSchedule saveSchedules(ParkingSchedule parkingSchedule);
 }

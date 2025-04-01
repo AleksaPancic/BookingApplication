@@ -1,8 +1,9 @@
-package com.DeskBooking.DeskBooking.service;
+package com.DeskBooking.DeskBooking.service.impl;
 
 import com.DeskBooking.DeskBooking.DTO.ShortScheduleInformation;
 import com.DeskBooking.DeskBooking.model.Schedules;
 
+import com.DeskBooking.DeskBooking.service.SchedulesService;
 import org.springframework.stereotype.Service;
 
 import com.DeskBooking.DeskBooking.repository.SchedulesRepository;
