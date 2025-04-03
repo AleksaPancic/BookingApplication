@@ -64,7 +64,10 @@ public class User {
 	
 	@Column(name = "UserActive")
 	private Boolean userActive;
-	
+
+	@Column(name = "AuthenticationFailure", nullable = false)
+	private Integer authenticationFailure = 0;
+
 	@ManyToOne
 	@JoinColumn(name = "WorkingUnit_ID", nullable = true)
 	private WorkingUnit workingUnit;

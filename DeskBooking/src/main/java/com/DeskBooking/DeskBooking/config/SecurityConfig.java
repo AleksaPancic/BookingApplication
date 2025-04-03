@@ -1,6 +1,8 @@
 package com.DeskBooking.DeskBooking.config;
 
 
+import com.DeskBooking.DeskBooking.exception.UnauthenticatedUserException;
+import com.DeskBooking.DeskBooking.exception.ForbiddenUserException;
 import com.DeskBooking.DeskBooking.registration.token.ConfirmationTokenService;
 import com.DeskBooking.DeskBooking.repository.RoleRepository;
 import com.DeskBooking.DeskBooking.repository.UsersRepository;
@@ -10,7 +12,9 @@ import com.DeskBooking.DeskBooking.service.EmailSenderService;
 import com.DeskBooking.DeskBooking.service.HtmlData;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -45,17 +49,16 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, DataSource dataSource) throws Exception {
-		http
+//		http.requiresChannel(rcc -> rcc.anyRequest().requiresSecure()) //Only HTTPS when its requiresSecure, only for prod
+			http
 				.csrf(csrf -> csrf.disable())
-//				.sessionManagement(session -> session
-//						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//				)
 				.authorizeHttpRequests(auth -> auth
 						.anyRequest().permitAll()
 				)
-				// Add your custom filter to the chain
-				.addFilter(new AuthenticationFilter(authenticationManager()))
-				.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+				.addFilter(new AuthenticationFilter(authenticationManager(), authenticationEventPublisher()))
+				.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+				.exceptionHandling((exception) -> exception.authenticationEntryPoint(new UnauthenticatedUserException()))
+				.exceptionHandling((exception) -> exception.accessDeniedHandler(new ForbiddenUserException()));
 
 		return http.build();
 	}
@@ -84,6 +87,10 @@ public class SecurityConfig {
 		return new HaveIBeenPwnedRestApiPasswordChecker();
 	}
 
+	@Bean
+	public AuthenticationEventPublisher authenticationEventPublisher() {
+		return new DefaultAuthenticationEventPublisher();
+	}
 }
 
 //Spring boot 2.x old config

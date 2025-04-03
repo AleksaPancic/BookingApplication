@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +20,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager authenticationManager;
+	private final AuthenticationEventPublisher authenticationEventPublisher;
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request,  //when user try to login
@@ -43,8 +44,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		   	String username = request.getParameter("username");
 	        String password = request.getParameter("password");
 	        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-	        return authenticationManager.authenticate(authenticationToken);
-	}
+			try {
+				return authenticationManager.authenticate(authenticationToken);
+			} catch (AuthenticationException ex) {
+				authenticationEventPublisher.publishAuthenticationFailure(ex, authenticationToken);
+				throw ex;
+			}
+    }
 	
 	//function that invokes after attemptAuthentication is succesful
 	//This method will create jwt token and send it to a client
@@ -71,6 +77,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         tokens.put("access_token", access_token);
         tokens.put("refresh_token", refresh_token);
         response.setContentType(APPLICATION_JSON_VALUE);
+		authenticationEventPublisher.publishAuthenticationSuccess(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities()));
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 	}
+
 }

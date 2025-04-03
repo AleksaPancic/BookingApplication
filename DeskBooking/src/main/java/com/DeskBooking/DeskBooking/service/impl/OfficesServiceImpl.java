@@ -94,6 +94,7 @@ public class OfficesServiceImpl implements OfficesSevice {
 		desksRepository.delete(desks.get(i));
 		}
 	}
+
 	public List<Offices> getOffices() { 
 		
         return new ArrayList<Offices>(officesRepository.findAll());
