@@ -34,3 +34,4 @@ build/
 ### VS Code ###
 .vscode/
 DeskBooking/.DS_Store
+/.idea

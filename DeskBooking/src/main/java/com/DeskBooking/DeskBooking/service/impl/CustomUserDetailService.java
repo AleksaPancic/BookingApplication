@@ -1,22 +1,18 @@
 package com.DeskBooking.DeskBooking.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.DeskBooking.DeskBooking.service.EmailSenderService;
 import com.DeskBooking.DeskBooking.service.HtmlData;
 import com.DeskBooking.DeskBooking.service.UsersService;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -393,5 +389,13 @@ public class CustomUserDetailService implements UserDetailsService, UsersService
 			return authority;
 		}).collect(Collectors.toList());
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+	}
+
+	@Override
+	public User fetchCurrentUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		User user = usersRepository.findByUsername(username);
+		return user;
 	}
 }

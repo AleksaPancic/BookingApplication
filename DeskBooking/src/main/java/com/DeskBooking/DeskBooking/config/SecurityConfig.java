@@ -3,6 +3,7 @@ package com.DeskBooking.DeskBooking.config;
 
 import com.DeskBooking.DeskBooking.exception.UnauthenticatedUserException;
 import com.DeskBooking.DeskBooking.exception.ForbiddenUserException;
+import com.DeskBooking.DeskBooking.filter.CsrfCookieFilter;
 import com.DeskBooking.DeskBooking.registration.token.ConfirmationTokenService;
 import com.DeskBooking.DeskBooking.repository.RoleRepository;
 import com.DeskBooking.DeskBooking.repository.UsersRepository;
@@ -32,6 +33,10 @@ import com.DeskBooking.DeskBooking.jwt.AuthenticationFilter;
 import com.DeskBooking.DeskBooking.jwt.AuthorizationFilter;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 
 import javax.sql.DataSource;
 
@@ -49,12 +54,16 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, DataSource dataSource) throws Exception {
-//		http.requiresChannel(rcc -> rcc.anyRequest().requiresSecure()) //Only HTTPS when its requiresSecure, only for prod
+
+		CsrfTokenRequestAttributeHandler csrfTokenRequestHandler = new CsrfTokenRequestAttributeHandler();
+//		http.requiresChannel(rcc -> rcc.anyRequest().requiresSecure()) //Only HTTPS when its requiresSecure, only for prod i can add @Profile and stuff
 			http
-				.csrf(csrf -> csrf.disable())
+				.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+						.csrfTokenRequestHandler(csrfTokenRequestHandler))
 				.authorizeHttpRequests(auth -> auth
 						.anyRequest().permitAll()
 				)
+					.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
 				.addFilter(new AuthenticationFilter(authenticationManager(), authenticationEventPublisher()))
 				.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling((exception) -> exception.authenticationEntryPoint(new UnauthenticatedUserException()))
@@ -70,7 +79,6 @@ public class SecurityConfig {
 		authProvider.setPasswordEncoder(passwordEncoder());
 		return new ProviderManager(authProvider);
 	}
-
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

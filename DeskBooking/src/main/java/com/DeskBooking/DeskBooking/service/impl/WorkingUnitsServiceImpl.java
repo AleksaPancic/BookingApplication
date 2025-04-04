@@ -1,5 +1,6 @@
-package com.DeskBooking.DeskBooking.service;
+package com.DeskBooking.DeskBooking.service.impl;
 
+import com.DeskBooking.DeskBooking.service.WorkingUnitsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

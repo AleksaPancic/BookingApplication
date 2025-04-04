@@ -7,6 +7,7 @@ import com.DeskBooking.DeskBooking.model.Role;
 import com.DeskBooking.DeskBooking.model.User;
 
 public interface UsersService {
+
 	User saveUser(User user);
 	Role saveRole(Role role);
 	public void addUsername(String usernameact, String username);
@@ -37,4 +38,5 @@ public interface UsersService {
 	int getUsersSearchCount(String name);
 	void removeSuperAdminRole(User user);
 	void removeUserRole(User user);
+	User fetchCurrentUser();
 }

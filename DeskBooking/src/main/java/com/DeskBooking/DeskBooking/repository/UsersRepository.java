@@ -15,7 +15,7 @@ import com.DeskBooking.DeskBooking.model.User;
 @Repository
 @Transactional(readOnly = true)
 public interface UsersRepository extends JpaRepository<User, Long>, PagingAndSortingRepository<User, Long> {
-	User findByUsername(String username);
+	User findByUsername(String username); //refactor to be optional, goddamn it
 
 	@Query("select u from User u where (upper(u.firstName) like concat('%', upper(:name),'%')) or (upper(u.lastName) like concat('%', upper(:name),'%'))")
 	Page<User> findAllByBothName(String name, Pageable page);
